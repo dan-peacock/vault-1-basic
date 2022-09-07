@@ -32,7 +32,7 @@ resource "tfe_variable_set" "vault_details" {
 }
 
 resource "tfe_variable" "vault_url" {
-  depends_on = [hcp_vault_cluster.vault_cluster.vault_cluster]
+  depends_on = [hcp_vault_cluster.vault_cluster]
 
   key             = "vault_url"
   value           = hcp_vault_cluster.vault_cluster.vault_public_endpoint_url
