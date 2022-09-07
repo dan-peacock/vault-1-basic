@@ -20,15 +20,11 @@ provider "tfe" {
   token = var.tfc_token
 }
 
-data tfe_organization "tfe_org" {
-  name = var.tfc_org_name
-}
-
 resource "tfe_variable_set" "vault_details" {
   name         = "Vault Details"
   description  = "Variable set applied to all workspaces."
   global       = true
-  organization = data.tfe_organization.tfe_org.id
+  organization = var.tfc_org_name
 }
 
 resource "tfe_variable" "vault_url" {
