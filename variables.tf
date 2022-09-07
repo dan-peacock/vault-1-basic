@@ -11,3 +11,7 @@ variable "hcp_net_id" {
 variable "tfc_token" {
   
 }
+
+variable "tfc_org_name" {
+  
+}

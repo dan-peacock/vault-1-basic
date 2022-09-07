@@ -20,7 +20,9 @@ provider "tfe" {
   token = var.tfc_token
 }
 
-data tfe_organization "tfe_org" {}
+data tfe_organization "tfe_org" {
+  name = var.tfc_org_name
+}
 
 resource "tfe_variable_set" "vault_details" {
   name         = "Vault Details"
