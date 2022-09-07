@@ -17,7 +17,7 @@ resource "hcp_vault_cluster_admin_token" "vault_admin_token" {
 
 # Add to Terraform Variable Set
 provider "tfe" {
-  token = var.token
+  token = var.tfc_token
 }
 
 data tfe_organization "tfe_org" {}
