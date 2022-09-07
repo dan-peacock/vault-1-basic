@@ -8,6 +8,6 @@ variable "hcp_net_id" {
   default = "hvn-vault"
 }
 
-variable "email" {}
-
-variable "name" {}
+variable "tfc_token" {
+  
+}

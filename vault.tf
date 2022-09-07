@@ -16,19 +16,22 @@ resource "hcp_vault_cluster_admin_token" "vault_admin_token" {
 }
 
 # Add to Terraform Variable Set
-resource "tfe_organization" "tf_account" {
-  name  = var.name
-  email = var.email
+provider "tfe" {
+  token = var.token
 }
+
+data tfe_organization "tfe_org" {}
 
 resource "tfe_variable_set" "vault_details" {
   name         = "Vault Details"
   description  = "Variable set applied to all workspaces."
   global       = true
-  organization = tfe_organization.tf_account.name
+  organization = data.tfe_organization.tfe_org.id
 }
 
 resource "tfe_variable" "vault_url" {
+  depends_on = [hcp_vault_cluster.vault_cluster.vault_cluster]
+
   key             = "vault_url"
   value           = hcp_vault_cluster.vault_cluster.vault_public_endpoint_url
   category        = "terraform"
@@ -37,6 +40,8 @@ resource "tfe_variable" "vault_url" {
 }
 
 resource "tfe_variable" "vault_token" {
+  depends_on = [hcp_vault_cluster_admin_token.vault_admin_token]
+
   key             = "vault_token"
   value           = hcp_vault_cluster_admin_token.vault_admin_token.token
   sensitive       = true
