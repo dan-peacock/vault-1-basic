@@ -23,6 +23,7 @@ resource "hcp_vault_cluster_admin_token" "vault_admin_token" {
 
 #Outputs
 output "vault_token" {
+    sensitive = false
     value = hcp_vault_cluster_admin_token.vault_admin_token.token
 }
 
