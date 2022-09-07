@@ -36,7 +36,7 @@ resource "tfe_variable" "vault_url" {
   variable_set_id = tfe_variable_set.vault_details.id
 }
 
-resource "tfe_variable" "vault_url" {
+resource "tfe_variable" "vault_token" {
   key             = "vault_token"
   value           = hcp_vault_cluster_admin_token.vault_admin_token.token
   sensitive       = true
