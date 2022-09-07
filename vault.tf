@@ -12,7 +12,7 @@ resource "hcp_vault_cluster" "vault_cluster" {
 }
 
 resource "hcp_vault_cluster_admin_token" "vault_admin_token" {
-  cluster_id = hcp_vault_cluster.example_vault_cluster.cluster_id
+  cluster_id = hcp_vault_cluster.vault_cluster.cluster_id
 }
 
 # Configure Secrets Engine
