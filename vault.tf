@@ -22,7 +22,10 @@ resource "hcp_vault_cluster_admin_token" "vault_admin_token" {
 
 
 #Outputs
-output "vault_details" {
-    admin_token = hcp_vault_cluster_admin_token.vault_admin_token.token
-    url = hcp_vault_cluster.vault_cluster.vault_public_endpoint_url
+output "vault_token" {
+    value = hcp_vault_cluster_admin_token.vault_admin_token.token
+}
+
+output "vault_url" {
+    value = hcp_vault_cluster.vault_cluster.vault_public_endpoint_url
 }
