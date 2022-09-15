@@ -21,12 +21,8 @@ provider "vault" {
   token = hcp_vault_cluster_admin_token.vault_admin_token.token
 }
 
-resource "vault_generic_secret" "password" {
+data "vault_generic_secret" "random" {
   path = "sys/tools/random"
-  data_json = <<EOT
-{
-}
-EOT
 }
 
 module "vault_aws_secret_backend" {
@@ -99,5 +95,9 @@ resource "tfe_variable" "vault_token" {
   variable_set_id = tfe_variable_set.vault_details.id
 }
 
+
+output "random" {
+  value = vault_generic_secret.random.data
+}
 
 
