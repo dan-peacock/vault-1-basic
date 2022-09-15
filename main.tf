@@ -47,7 +47,7 @@ resource "vault_auth_backend" "userpass" {
 # Generate password 
 resource "vault_generic_secret" "random" {
   path = "sys/tools/random"
-
+  disable_read = true
   data_json = <<EOT
 {
   "format": "hex"
