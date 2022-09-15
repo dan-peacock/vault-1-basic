@@ -27,5 +27,3 @@ variable "SP_Password" {}
 variable "SP_AppID" {}
 
 variable "username" {}
-
-variable "password" {}

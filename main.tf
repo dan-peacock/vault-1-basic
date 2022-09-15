@@ -21,16 +21,6 @@ provider "vault" {
   token = hcp_vault_cluster_admin_token.vault_admin_token.token
 }
 
-resource "vault_generic_secret" "random" {
-  path = "sys/tools/random"
-
-  data_json = <<EOT
-{
-  "format": "hex"
-}
-EOT
-}
-
 module "vault_aws_secret_backend" {
   source = "./modules/aws"
   count = var.aws_enabled ? 1 : 0
@@ -54,6 +44,17 @@ resource "vault_auth_backend" "userpass" {
   type = "userpass"
 }
 
+# Generate password 
+resource "vault_generic_secret" "random" {
+  path = "sys/tools/random"
+
+  data_json = <<EOT
+{
+  "format": "hex"
+}
+EOT
+}
+
 # Create a user
 resource "vault_generic_endpoint" "user" {
   depends_on           = [vault_auth_backend.userpass]
@@ -63,7 +64,7 @@ resource "vault_generic_endpoint" "user" {
   data_json = <<EOT
 {
   "policies": ["admins", "eaas-client"],
-  "password": "${var.password}"
+  "password": ${resource.vault_generic_secret.random.data}"
 }
 EOT
 }
@@ -90,21 +91,22 @@ resource "tfe_variable" "vault_url" {
   variable_set_id = tfe_variable_set.vault_details.id
 }
 
-resource "tfe_variable" "vault_token" {
-  depends_on = [hcp_vault_cluster_admin_token.vault_admin_token]
+resource "tfe_variable" "vault_password" {
 
-  key             = "vault_token"
-  value           = hcp_vault_cluster_admin_token.vault_admin_token.token
+  key             = "vault_password"
+  value           = resource.vault_generic_secret.random.data
   sensitive       = true
   category        = "terraform"
-  description     = "Vault admin token"
+  description     = "Vault password"
   variable_set_id = tfe_variable_set.vault_details.id
 }
 
+resource "tfe_variable" "vault_username" {
 
-output "random" {
-  sensitive = true
-  value = resource.vault_generic_secret.random.data
+  key             = "vault_username"
+  value           = var.username
+  sensitive       = true
+  category        = "terraform"
+  description     = "Vault username"
+  variable_set_id = tfe_variable_set.vault_details.id
 }
-
-
