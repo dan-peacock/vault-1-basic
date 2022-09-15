@@ -63,7 +63,7 @@ resource "vault_generic_endpoint" "user" {
   data_json = <<EOT
 {
   "policies": ["admins", "eaas-client"],
-  "password": ${var.password}
+  "password": "${var.password}"
 }
 EOT
 }
@@ -103,6 +103,7 @@ resource "tfe_variable" "vault_token" {
 
 
 output "random" {
+  sensitive = true
   value = resource.vault_generic_secret.random.data
 }
 
