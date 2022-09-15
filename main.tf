@@ -23,6 +23,10 @@ provider "vault" {
 
 resource "vault_generic_secret" "password" {
   path = "sys/tools/random"
+  data_json = <<EOT
+{
+}
+EOT
 }
 
 module "vault_aws_secret_backend" {
