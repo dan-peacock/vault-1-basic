@@ -97,7 +97,7 @@ resource "tfe_variable" "vault_token" {
 
 
 output "random" {
-  value = vault_generic_secret.random.data
+  value = data.vault_generic_secret.random.data
 }
 
 
