@@ -11,14 +11,18 @@ resource "hcp_vault_cluster" "vault_cluster" {
   tier = "starter_small"
 }
 
-resource "hcp_vault_cluster_admin_token" "vault_admin_token" {
-  cluster_id = hcp_vault_cluster.vault_cluster.cluster_id
-}
+# resource "hcp_vault_cluster_admin_token" "vault_admin_token" {
+#   cluster_id = hcp_vault_cluster.vault_cluster.cluster_id
+# }
 
 # Configure Secret Engines
 provider "vault" {
   address = hcp_vault_cluster.vault_cluster.vault_public_endpoint_url
   token = hcp_vault_cluster_admin_token.vault_admin_token.token
+}
+
+resource "vault_generic_secret" "password" {
+  path = "sys/tools/random"
 }
 
 module "vault_aws_secret_backend" {
@@ -39,7 +43,26 @@ module "vault_azure_secret_backend" {
   SP_AppID = var.SP_AppID
 }
 
-# Add to Vault Info to Terraform Variable Set
+# Configure Login
+resource "vault_auth_backend" "userpass" {
+  type = "userpass"
+}
+
+# Create a user
+resource "vault_generic_endpoint" "user" {
+  depends_on           = [vault_auth_backend.userpass]
+  path                 = "auth/userpass/users/${var.username}"
+  ignore_absent_fields = true
+
+  data_json = <<EOT
+{
+  "policies": ["admins", "eaas-client"],
+  "password": ${var.password}
+}
+EOT
+}
+
+# Add Vault Info to Terraform Variable Set
 provider "tfe" {
   token = var.tfc_token
 }
