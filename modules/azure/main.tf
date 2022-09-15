@@ -3,6 +3,7 @@ resource "vault_azure_secret_backend" "azure" {
   tenant_id       = var.tenant_ID
   client_secret   = var.SP_Password
   client_id       = var.SP_AppID
+  use_microsoft_graph_api = true
 }
 
 resource "vault_azure_secret_backend_role" "generated_role" {
