@@ -94,7 +94,7 @@ resource "tfe_variable" "vault_url" {
 resource "tfe_variable" "vault_password" {
 
   key             = "vault_password"
-  value           = vault_generic_secret.random.data_json
+  value           = vault_generic_secret.random.data.value
   sensitive       = true
   category        = "terraform"
   description     = "Vault password"
