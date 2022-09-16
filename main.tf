@@ -45,8 +45,10 @@ resource "vault_auth_backend" "userpass" {
 }
 
 # Generate password 
-resource "vault_generic_secret" "random" {
+resource "vault_generic_endpoint" "random" {
   path = "sys/tools/random"
+  disable_read         = true
+  disable_delete       = true
   data_json = <<EOT
 {
   "format": "hex"
@@ -93,8 +95,8 @@ resource "tfe_variable" "vault_url" {
 resource "tfe_variable" "vault_password" {
 
   key             = "vault_password"
-  value           = vault_generic_secret.random.data
-  sensitive       = true
+  value           = vault_generic_endpoint.random.write_data
+  sensitive       = false
   category        = "terraform"
   description     = "Vault password"
   variable_set_id = tfe_variable_set.vault_details.id
