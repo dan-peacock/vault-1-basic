@@ -64,7 +64,7 @@ resource "vault_generic_endpoint" "user" {
   data_json = <<EOT
 {
   "policies": ["admins", "eaas-client"],
-  "password": ${resource.vault_generic_secret.random.data}"
+  "password": ${vault_generic_secret.random.data}"
 }
 EOT
 }
@@ -94,7 +94,7 @@ resource "tfe_variable" "vault_url" {
 resource "tfe_variable" "vault_password" {
 
   key             = "vault_password"
-  value           = vault_generic_secret.random.data.value
+  value           = vault_generic_secret.random.data
   sensitive       = true
   category        = "terraform"
   description     = "Vault password"
